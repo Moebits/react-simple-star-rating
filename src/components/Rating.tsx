@@ -36,6 +36,10 @@ export interface RatingProps extends StarIconProps {
   rtl?: boolean
   /** Enable a fractional rate (half icon) */
   allowFraction?: boolean
+  /** Enable unconstrained fractions */
+  fullFraction?: boolean
+  /** Multiply the default value by this amount */
+  multiplier?: number
   /** Enable / Disable hover effect on empty icons */
   allowHover?: boolean
   /** Enable / Disable hover effect on filled icons */
@@ -107,6 +111,8 @@ export function Rating({
   rtl = false,
   customIcons = [],
   allowFraction = false,
+  fullFraction = false,
+  multiplier = 1,
   style,
   className = 'react-simple-star-rating',
   transition = false,
@@ -160,8 +166,9 @@ export function Rating({
       return Math.ceil(initialValue) * 2 * 10
     }
 
+    if (fullFraction) return (initialValue / iconsCount) * 100
     return Math.round((initialValue / iconsCount) * 100)
-  }, [allowFraction, initialValue, iconsCount, totalIcons])
+  }, [allowFraction, fullFraction, initialValue, iconsCount, totalIcons])
 
   const localRatingIndex = useMemo(() => (allowFraction ? initialValue * 2 - 1 : initialValue - 1) || 0, [
     allowFraction,
@@ -169,7 +176,7 @@ export function Rating({
   ])
 
   const renderValue = useCallback(
-    (value: number) => (iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100),
+    (value: number) => (iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100) * multiplier,
     [iconsCount]
   )
 
