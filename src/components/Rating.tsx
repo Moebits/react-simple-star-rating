@@ -204,7 +204,7 @@ export function Rating({
     if (currentValue > 0) {
       // Set value and index state
       if (fullFraction) {
-        dispatch({ type: 'PointerMove', payload: (currentValue * 100) / width, index })
+        dispatch({ type: 'PointerMove', payload: Math.round((currentValue * 100) / width), index })
       } else {
         dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
       }
