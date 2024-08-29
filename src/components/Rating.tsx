@@ -166,9 +166,8 @@ export function Rating({
       return Math.ceil(initialValue) * 2 * 10
     }
 
-    if (fullFraction) return (initialValue / iconsCount) * 100
     return Math.round((initialValue / iconsCount) * 100)
-  }, [allowFraction, fullFraction, initialValue, iconsCount, totalIcons])
+  }, [allowFraction, initialValue, iconsCount, totalIcons])
 
   const localRatingIndex = useMemo(() => (allowFraction ? initialValue * 2 - 1 : initialValue - 1) || 0, [
     allowFraction,
@@ -195,7 +194,7 @@ export function Rating({
     for (let i = 0; i <= totalIcons; i = i + 1) {
       if (positionX <= iconWidth * i) {
         if (i === 0 && positionX < iconWidth) currentValue = 0
-        else currentValue = i
+        else fullFraction ? currentValue = positionX : currentValue = i
         break
       }
     }
@@ -204,7 +203,11 @@ export function Rating({
 
     if (currentValue > 0) {
       // Set value and index state
-      dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
+      if (fullFraction) {
+        dispatch({ type: 'PointerMove', payload: (currentValue * 100) / width, index })
+      } else {
+        dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
+      }
 
       if (onPointerMove) {
         if (hoverValue) onPointerMove(renderValue(hoverValue), index, event)
