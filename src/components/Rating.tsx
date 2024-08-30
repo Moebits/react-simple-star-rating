@@ -40,6 +40,8 @@ export interface RatingProps extends StarIconProps {
   fullFraction?: boolean
   /** Multiply the default value by this amount */
   multiplier?: number
+  snap?: number
+  /** Snap to increments of this amount */
   /** Enable / Disable hover effect on empty icons */
   allowHover?: boolean
   /** Enable / Disable hover effect on filled icons */
@@ -113,6 +115,7 @@ export function Rating({
   allowFraction = false,
   fullFraction = false,
   multiplier = 1,
+  snap = 0,
   style,
   className = 'react-simple-star-rating',
   transition = false,
@@ -159,6 +162,7 @@ export function Rating({
 
   // Convert local rating value to precentage
   const localRating = useMemo(() => {
+    if (multiplier) initialValue /= multiplier
     if (initialValue > totalIcons) return 0
 
     // Check for a decimal value
@@ -168,7 +172,7 @@ export function Rating({
 
     if (fullFraction) return (initialValue / iconsCount) * 100
     return Math.round((initialValue / iconsCount) * 100)
-  }, [allowFraction, fullFraction, initialValue, iconsCount, totalIcons])
+  }, [allowFraction, initialValue, iconsCount, totalIcons])
 
   const localRatingIndex = useMemo(() => (allowFraction ? initialValue * 2 - 1 : initialValue - 1) || 0, [
     allowFraction,
@@ -176,17 +180,26 @@ export function Rating({
   ])
 
   const renderValue = useCallback(
-    (value: number) => (iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100) * multiplier,
+    (value: number) => {
+      let val = (iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100)
+      if (multiplier !== 1) return Math.round(val * multiplier)
+      return val
+    },
     [iconsCount]
   )
 
   const handlePointerMove = (event: PointerEvent<HTMLSpanElement>) => {
     const { clientX, currentTarget } = event
     // Get main span element position and width
-    const { left, right, width } = currentTarget.children[0].getBoundingClientRect()
+    let { left, right, width } = currentTarget.children[0].getBoundingClientRect()
 
     // Handle RTL
-    const positionX = rtl ? right - clientX : clientX - left
+    let positionX = rtl ? right - clientX : clientX - left
+    if (snap) {
+      positionX = Math.round(positionX / snap) * snap
+      width = Math.round(width / snap) * snap
+    }
+    if (positionX > width) positionX = width
 
     // Get current pointer position while moves over the icons
     let currentValue = totalIcons
@@ -204,7 +217,11 @@ export function Rating({
 
     if (currentValue > 0) {
       // Set value and index state
-      dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
+      if (fullFraction) {
+        dispatch({ type: 'PointerMove', payload: (positionX * 100) / width, index })
+      } else {
+        dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
+      }
 
       if (onPointerMove) {
         if (hoverValue) onPointerMove(renderValue(hoverValue), index, event)
