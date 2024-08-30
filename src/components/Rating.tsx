@@ -159,7 +159,7 @@ export function Rating({
 
   // Convert local rating value to precentage
   const localRating = useMemo(() => {
-    if (multiplier) initialValue *= multiplier
+    if (multiplier) initialValue /= multiplier
     if (initialValue > totalIcons) return 0
 
     // Check for a decimal value
