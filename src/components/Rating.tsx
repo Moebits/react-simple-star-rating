@@ -40,8 +40,8 @@ export interface RatingProps extends StarIconProps {
   fullFraction?: boolean
   /** Multiply the default value by this amount */
   multiplier?: number
-  snap?: number
   /** Snap to increments of this amount */
+  snap?: number
   /** Enable / Disable hover effect on empty icons */
   allowHover?: boolean
   /** Enable / Disable hover effect on filled icons */
