@@ -191,10 +191,14 @@ export function Rating({
   const handlePointerMove = (event: PointerEvent<HTMLSpanElement>) => {
     const { clientX, currentTarget } = event
     // Get main span element position and width
-    const { left, right, width } = currentTarget.children[0].getBoundingClientRect()
+    let { left, right, width } = currentTarget.children[0].getBoundingClientRect()
 
     // Handle RTL
     let positionX = rtl ? right - clientX : clientX - left
+    if (snap) {
+      positionX = Math.round(positionX / snap) * snap
+      width = Math.round(width / snap) * snap
+    }
     if (positionX > width) positionX = width
 
     // Get current pointer position while moves over the icons
@@ -214,9 +218,7 @@ export function Rating({
     if (currentValue > 0) {
       // Set value and index state
       if (fullFraction) {
-        let value = (positionX * 100) / width
-        if (snap) value = Math.round(value / 5) * 5
-        dispatch({ type: 'PointerMove', payload: value, index })
+        dispatch({ type: 'PointerMove', payload: (positionX * 100) / width, index })
       } else {
         dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
       }
