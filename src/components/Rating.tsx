@@ -175,7 +175,7 @@ export function Rating({
   ])
 
   const renderValue = useCallback(
-    (value: number) => (iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100) * multiplier,
+    (value: number) => Math.round((iconsCount % 2 !== 0 ? value / 2 / 10 : (value * iconsCount) / 100) * multiplier),
     [iconsCount]
   )
 
@@ -194,7 +194,7 @@ export function Rating({
     for (let i = 0; i <= totalIcons; i = i + 1) {
       if (positionX <= iconWidth * i) {
         if (i === 0 && positionX < iconWidth) currentValue = 0
-        else fullFraction ? currentValue = positionX : currentValue = i
+        else currentValue = i
         break
       }
     }
@@ -204,7 +204,7 @@ export function Rating({
     if (currentValue > 0) {
       // Set value and index state
       if (fullFraction) {
-        dispatch({ type: 'PointerMove', payload: Math.round((currentValue * 100) / width), index })
+        dispatch({ type: 'PointerMove', payload: (positionX * 100) / width, index })
       } else {
         dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
       }
