@@ -167,6 +167,7 @@ export function Rating({
       return Math.ceil(initialValue) * 2 * 10
     }
 
+    if (fullFraction) return (initialValue / iconsCount) * 100
     return Math.round((initialValue / iconsCount) * 100)
   }, [allowFraction, initialValue, iconsCount, totalIcons])
 
@@ -190,7 +191,8 @@ export function Rating({
     const { left, right, width } = currentTarget.children[0].getBoundingClientRect()
 
     // Handle RTL
-    const positionX = rtl ? right - clientX : clientX - left
+    let positionX = rtl ? right - clientX : clientX - left
+    if (positionX > width) positionX = width
 
     // Get current pointer position while moves over the icons
     let currentValue = totalIcons
