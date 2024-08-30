@@ -195,7 +195,6 @@ export function Rating({
 
     // Handle RTL
     let positionX = rtl ? right - clientX : clientX - left
-    if (snap) positionX = Math.round(positionX / 5) * 5
     if (positionX > width) positionX = width
 
     // Get current pointer position while moves over the icons
@@ -215,7 +214,9 @@ export function Rating({
     if (currentValue > 0) {
       // Set value and index state
       if (fullFraction) {
-        dispatch({ type: 'PointerMove', payload: (positionX * 100) / width, index })
+        let value = (positionX * 100) / width
+        if (snap) value = Math.round(value / 5) * 5
+        dispatch({ type: 'PointerMove', payload: value, index })
       } else {
         dispatch({ type: 'PointerMove', payload: (currentValue * 100) / totalIcons, index })
       }
