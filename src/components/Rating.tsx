@@ -40,6 +40,8 @@ export interface RatingProps extends StarIconProps {
   fullFraction?: boolean
   /** Multiply the default value by this amount */
   multiplier?: number
+  snap?: number
+  /** Snap to increments of this amount */
   /** Enable / Disable hover effect on empty icons */
   allowHover?: boolean
   /** Enable / Disable hover effect on filled icons */
@@ -113,6 +115,7 @@ export function Rating({
   allowFraction = false,
   fullFraction = false,
   multiplier = 1,
+  snap = 0,
   style,
   className = 'react-simple-star-rating',
   transition = false,
@@ -192,6 +195,7 @@ export function Rating({
 
     // Handle RTL
     let positionX = rtl ? right - clientX : clientX - left
+    if (snap) positionX = Math.round(positionX / 5) * 5
     if (positionX > width) positionX = width
 
     // Get current pointer position while moves over the icons

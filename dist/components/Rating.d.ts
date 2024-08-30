@@ -27,6 +27,8 @@ export interface RatingProps extends StarIconProps {
     fullFraction?: boolean;
     /** Multiply the default value by this amount */
     multiplier?: number;
+    snap?: number;
+    /** Snap to increments of this amount */
     /** Enable / Disable hover effect on empty icons */
     allowHover?: boolean;
     /** Enable / Disable hover effect on filled icons */
@@ -70,4 +72,4 @@ export interface RatingProps extends StarIconProps {
     /** Separator word in a title of a rating star `(1 out of 5)` */
     titleSeparator?: string;
 }
-export declare function Rating({ onClick, onPointerMove, onPointerEnter, onPointerLeave, initialValue, iconsCount, size, readonly, rtl, customIcons, allowFraction, fullFraction, multiplier, style, className, transition, allowHover, disableFillHover, fillIcon, fillColor, fillColorArray, fillStyle, fillClassName, emptyIcon, emptyColor, emptyStyle, emptyClassName, allowTitleTag, showTooltip, tooltipDefaultText, tooltipArray, tooltipStyle, tooltipClassName, SVGclassName, titleSeparator, SVGstyle, SVGstorkeWidth, SVGstrokeColor }: RatingProps): JSX.Element;
+export declare function Rating({ onClick, onPointerMove, onPointerEnter, onPointerLeave, initialValue, iconsCount, size, readonly, rtl, customIcons, allowFraction, fullFraction, multiplier, snap, style, className, transition, allowHover, disableFillHover, fillIcon, fillColor, fillColorArray, fillStyle, fillClassName, emptyIcon, emptyColor, emptyStyle, emptyClassName, allowTitleTag, showTooltip, tooltipDefaultText, tooltipArray, tooltipStyle, tooltipClassName, SVGclassName, titleSeparator, SVGstyle, SVGstorkeWidth, SVGstrokeColor }: RatingProps): JSX.Element;
